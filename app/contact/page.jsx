@@ -24,44 +24,16 @@ const Contact = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isVerified, setIsVerified] = useState(false);
+  // const [isVerified, setIsVerified] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: null }); // Clear error for the field
   };
 
-  const handleExpired = () => {
-    setIsVerified(false);
-  };
-
-  const handleCaptchaSubmission = async (token) => {
-    try {
-      if (token) {
-        await fetch("/api", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ token }),
-        });
-        setIsVerified(true);
-        setErrors({ ...errors, captcha: null });
-      }
-    } catch (e) {
-      setIsVerified(false);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm(formData, setErrors)) return;
-
-    if (!isVerified) {
-      setErrors({ ...errors, captcha: "Please complete the CAPTCHA." });
-      return;
-    }
 
     setIsLoading(true);
 
@@ -196,13 +168,7 @@ const Contact = () => {
                   <p className="text-red-500 text-sm">{errors.message}</p>
                 )}
               </div>
-              <div className="flex justify-center mt-4">
-                <ReCAPTCHA
-                  sitekey={process.env.RECAPTCHA_SITE_KEY}
-                  onChange={handleCaptchaSubmission}
-                  onExpired={handleExpired}
-                />
-              </div>
+
               {!isLoading ? (
                 <Button size="md" className="max-w-40" type="submit">
                   Send message
