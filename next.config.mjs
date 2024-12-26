@@ -3,8 +3,8 @@ const nextConfig = {
   env: {
     SECRET_API_KEY: process.env.SECRET_API_KEY,
     TEMPLATE_KEY: process.env.TEMPLATE_KEY,
-    PUBLIC_EMAIL_KEY: process.env.PUBLIC_EMAIL_KEY,
-    SITE_KEY: process.env.SITE_KEY,
+    RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
+    RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
   },
 };
 
