@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,15 +23,26 @@ const Contact = () => {
   const [formData, setFormData] = useState(initialContactState);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: null }); // Clear error for the field
   };
 
+  const handleCaptchaChange = (token) => {
+    setCaptchaToken(token);
+    setErrors({ ...errors, captcha: null }); // Clear captcha error
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm(formData, setErrors)) return;
+
+    if (!captchaToken) {
+      setErrors({ ...errors, captcha: "Please complete the CAPTCHA." });
+      return;
+    }
 
     setIsLoading(true);
 
@@ -164,6 +176,12 @@ const Contact = () => {
                 {errors.message && (
                   <p className="text-red-500 text-sm">{errors.message}</p>
                 )}
+              </div>
+              <div className="flex justify-center mt-4">
+                <ReCAPTCHA
+                  sitekey={process.env.SITE_KEY} // Replace with your site key
+                  onChange={handleCaptchaChange}
+                />
               </div>
               {!isLoading ? (
                 <Button size="md" className="max-w-40" type="submit">
